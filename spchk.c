@@ -13,9 +13,9 @@ void processFile(const char *path, const char* dictionary) {
     int fileDescriptor = open(path, O_RDONLY);
     if (fileDescriptor < 0) {
         perror(path);
-        exit(EXIT_FAILRE);
+        exit(EXIT_FAILURE);
     }
-    int bufLength = BUFLENGTH
+    int bufLength = BUFLENGTH;
     char *buffer = malloc(BUFLENGTH);
 
     int position = 0;
@@ -26,8 +26,8 @@ void processFile(const char *path, const char* dictionary) {
         lineStart = 0;
         int bufEnd = position + bytesRead;
         while (position < bufEnd) {
-            if (buf[position] == '\n'){ // found a line starting a linestart and ending before position
-                buf[position] = '\0';
+            if (buffer[position] == '\n'){ // found a line starting a linestart and ending before position
+                buffer[position] = '\0';
                 //buf + lineStart is where line begins, divide the line into words, hack off beginning and trailing punctuation, check against dictionary. (possibly make a new function for this)
                 lineStart = position + 1;
             }
@@ -60,7 +60,7 @@ void processFile(const char *path, const char* dictionary) {
 
 void traverseDir(const char *path, const char *dictionary) {
     DIR *dir;
-    struct dirent * dirElement
+    struct dirent * dirElement;
 
     dir = opendir(path);
     if (dir == NULL){
@@ -69,10 +69,10 @@ void traverseDir(const char *path, const char *dictionary) {
 
     while((dirElement = readdir(dir)) != NULL){
         if(strcmp(dirElement->d_name, "..") != 0 && strcmp(dirElement->d_name, ".") != 0){
-            if (direElement->d_type == DT_DIR){
+            if (dirElement->d_type == DT_DIR){
                 char subDirPath[1024];
                 snprintf(path, sizeof(path), "%s/%s", path, dirElement->d_name);
-                traverseDir(subDirPath);
+                traverseDir(subDirPath, dictionary);
             }
             else {
                 processFile((dirElement->d_name), dictionary)
